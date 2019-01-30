@@ -1,29 +1,26 @@
 # Site settings
-title: *folio
-email: you@example.com
+title: André Queiroz
+email: andrequeiroz@live.com
 description: > # this means to ignore newlines until "baseurl:"
-  A simple, whitespace, helvetica based portfolio theme.
+  Criei esse espaço basicamente para compartilhar minha experiência de aprendizado.
+  O tema foi criado e disponibilizado por https://github.com/bogoli.
 baseurl:  # the subpath of your site, e.g. /blog/
-url:  # the base hostname & protocol for your site
-twitter_username: twitter_username
-github_username:  github_username
+url: "https://andreqz.com" # the base hostname & protocol for your site
+twitter_username: andrequeiroz
+github_username:  andrequeiroz
 
 # Build settings
 markdown: kramdown
 
 highlighter: rouge
 
+# Plugins adicionados
+plugins: [jekyll-paginate, jekyll-tagging, jemoji]
+
 # Pagination
 paginate: 15
 paginate_path: "/blog/page:num/"
 
-
-collections:
-  portfolio:
-    output: true
-    permalink: /portfolio/:path/
-  poetry:
-    output: true
-    permalink: /poetry/:path/
-
-
+# configurações de tag
+tag_page_layout: tags
+tag_page_dir: tags

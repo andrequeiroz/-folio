@@ -1,0 +1,727 @@
+---
+layout: post
+title: "introdução a inferência estatística 1"
+date: 2017-08-03 01:53:00 -0300
+category: livros
+tags: [bolfarine-sandoval, inferencia-classica]
+---
+
+{% include livros/bolfarine.html %}
+
+A primeira vez que li o Capítulo 1 do livro do Bolfarine (como era referido por mim e meus amigos de forma abreviada) foi há alguns anos, quando estava estudando pra prova do mestrado em estatística na UnB. Na ocasião era a única referência acessível que eu tinha sobre inferência clássica. Esse capítulo descreve alguns conceitos introdutórios sobre o tema.
+
+Um destaque que faço é quando os autores falaram sobre uma tal propriedade chamada de "falta de memória" da distribuição exponencial. Lembro disso da época da graduação e vale a pena registrar isso aqui também. É algo interessante. Por exemplo, a probabilidade de um evento (cuja distribuição tenha essa propriedade) ocorrer após 20s sendo que já se passaram 15s é simplesmente a probabilidade desse evento ocorrer após 5s. Ou seja, dane-se o tempo que já passou, é como se cada instante fosse o reinício do próprio evento. É bem louco isso, se bem que eu não sei o que é mais louco. Se é acreditar nesses reinícios sucessivos ou acreditar que algum fenômeno natural siga alguma distribuição de probabilidade, no caso a exponencial. De qualquer maneira, matematicamente, eis o porquê:
+
+$$
+\begin{align*}
+  P(X > x + a | X > a) &= \frac{P(X > x + a \cap X > a)}{P(X > a)}, \\
+    &= \frac{P(X > x + a)}{P(X > a)}.
+\end{align*}
+$$
+
+Como \\( f(x\|\theta) = \theta e^{-\theta x} \\), com \\( x > 0 \\) e \\( \theta > 0 \\),
+
+$$
+\begin{align*}
+  P(X > t) &= \int_t^\infty \theta e^{-\theta x} dx, \\
+    &= e^{-\theta t}.
+\end{align*}
+$$
+
+Então,
+
+$$
+\begin{align*}
+  P(X > x + a | X > a) &= \frac{P(X > x + a)}{P(X > a)}, \\
+    &= \frac{e^{-\theta (x + a)}}{e^{-\theta a}}, \\
+    &= e^{-\theta x}, \\
+    &= P(X > x).
+\end{align*}
+$$
+
+Outro destaque é quando foi citado os multiplicadores de Lagrange como método alternativo para provar que a média aritmética é o estimador com menor variância dentre os estimadores lineares. Eu não entendi porra nenhuma. Mas a culpa é minha que não manjo nada de multiplicadores de Lagrange (ainda!). Na época que fui ensinado provavelmente não dei o devido valor, agora tive que ler (ou passar os olhos) com cara de idiota. Novamente, culpa minha e somente minha.
+
+Por fim cheguei aos exercícios. Hora de testar a aprendizagem, ou, no caso específico desse capítulo, botar em prática velhos conceitos que deviam vir junto com a mensalidade do CONRE todo ano.
+
+O primeiro deles foi tranquilão. Era pra provar que o erro quadrático médio (EQM) é a soma da variância mais o quadrado do viés (B). Nada mais que manipulação algébrica, com uma pitada daquele método soma daqui, tira de lá.
+
+$$
+\begin{align*}
+  EQM(\hat{\theta}) &= E(\hat{\theta} - \theta)^2, \\
+    &= E(\hat{\theta}^2 - 2\hat{\theta}\theta + \theta^2), \\
+    &= E(\hat{\theta}^2) - 2E(\hat{\theta})\theta + \theta^2 + E(\hat{\theta})^2 - E(\hat{\theta})^2, \\
+    &= E(\hat{\theta}^2) - E(\hat{\theta})^2 + E(\hat{\theta})^2 - 2E(\hat{\theta})\theta + \theta^2, \\
+    &= Var(\hat{\theta}) + B^2(\hat{\theta}).
+\end{align*}
+$$
+
+O próximo exercício queria saber se eu era aquele tipo de cara que sabe porque o estimador "intuitivo" pra variância é viesado ou se eu apenas acreditava nisso sem saber o porquê. Provar isso é fácil a partir (novamente) daquele método soma daqui, tira de lá.
+
+$$
+\begin{align*}
+  E(\hat{\sigma^2}) &= E\left(\frac{1}{n} \sum_{i=1}^n (x_i - \bar{x})^2\right), \\
+    &= E\left(\frac{1}{n} \sum_{i=1}^n (x_i - \mu - \bar{x} + \mu)^2\right), \\
+    &= E\left(\frac{1}{n} \sum_{i=1}^n ((x_i - \mu) - (\bar{x} - \mu))^2\right), \\
+    &= \frac{1}{n} E\left(\sum_{i=1}^n (x_i - \mu)^2 - 2\sum_{i=1}^n(x_i - \mu)(\bar{x} - \mu) + n(\bar{x} - \mu)^2\right), \\
+    &= \frac{1}{n} E\left(\sum_{i=1}^n (x_i - \mu)^2 - n(\bar{x} - \mu)^2\right), \\
+    &= \frac{1}{n} \sum_{i=1}^n E(x_i - \mu)^2 - E(\bar{x} - \mu)^2, \\
+    &= E(X - \mu)^2 - EQM(\bar{x}), \\
+    &= Var(X) - Var(\bar{x}), \\
+    &= \sigma^2 - \frac{\sigma^2}{n}, \\
+    &= \frac{n - 1}{n} \sigma^2.
+\end{align*}
+$$
+
+O terceiro exercício é extremamente específico. Calcular o valor esperado e a variância de um estimador maluco. \\( E(\hat{\theta}_2) = (\frac{1}{2} + \frac{1}{4} + \frac{1}{4})\theta = \theta \\), ou seja, o estimador não tem viés. E, \\( Var(\hat{\theta}_2) = (\frac{1}{2^2} + \frac{1}{4^2} + \frac{1}{4^2}) 1 = \frac{6}{16} \\), ou seja, terça-feira.
+
+O quarto exercício, por sua vez, é bem legal. No fundo a gente acaba comparando os dois estimadores principais para variância, \\(\hat{\sigma^2} \\) e \\(s^2\\).
+
+Para calcular o \\(EQM(s^2)\\), eu fui dar uma de paladino da matemática e depois de meio metro de grafite gasto acabei chegando nisso:
+
+$$
+\begin{align*}
+  EQM(s^2) &= \frac{1}{(n-1)^2}E\left(\sum_{i=1}^n (x_i - \mu)^2 - n(\bar{x} - \mu)^2 \right)^2.
+\end{align*}
+$$
+
+Só que sempre a gente acaba esquecendo que quando um exercício está muito complicado, dando uns resultados esquisitos, porém matematicamente consistentes, é porque existem pelo menos dois caminhos possíveis. Ou a gente não sabe um pequeno truque que serve para resolver aquilo, ou o autor espera que a gente faça, a partir do zero, uma pequena descoberta científica que renderia uma belo artigo na década de 60. A primeira hipótese costuma ser verdadeira. Portanto, o truque que me faltava, e achei pesquisando sobre variância de \\(s^2\\) em outros livros, era que \\((n-1)\frac{s^2}{\sigma^2} \sim \chi_{n-1}^2\\) (se as observações forem independentes e vierem de uma distribuição normal, que é o caso!). Com isso, e lembrando que \\(s^2\\) não tem viés fica mole.
+
+$$
+\begin{align*}
+  EQM(s^2) &= Var(s^2), \\
+    &= Var\left(\frac{\sigma^2}{n-1} \chi_{n-1}^2\right), \\
+    &= \frac{\sigma^4}{(n-1)^2} 2(n - 1), \\
+    &= \frac{2\sigma^4}{n-1}.
+\end{align*}
+$$
+
+Já o \\(EQM(\hat{\sigma^2})\\), fica molinho também, pois \\(\hat{\sigma^2} = \frac{n-1}{n}s^2\\).
+
+$$
+\begin{align*}
+  EQM(\hat{\sigma^2}) &= Var(\hat{\sigma^2}) + B^2(\hat{\sigma^2}), \\
+    &= \frac{(n - 1)^2}{n^2} Var(s^2) + \left(\frac{n-1}{n}E(s^2) - \sigma^2\right)^2, \\
+    &= \frac{2\sigma^4(n - 1)}{n^2} + \left(\frac{n-1}{n}\sigma^2 - \sigma^2\right)^2, \\
+    &= \frac{2\sigma^4}{n-1}\left(1 - \frac{3n - 1}{2n^2} \right).
+\end{align*}
+$$
+
+Ou seja, é o \\(EQM(s^2)\\) multiplicado por um fator dependente do tamanho da amostra. O curioso é que esse fator é sempre positivo e menor que um. Portanto o erro quadrático médio de \\(\hat{\sigma^2}\\) é menor que o de \\(s^2\\), apesar de que eles vão se tornando bem próximos conforme o tamanho da amostra aumenta. Isso me lembra de um questionamento que já tive algumas vezes. Por que usar \\(s^2\\)? Beleza, você soma os desvios quadráticos e tira a "média". Não! Tem que dividir por n menos um elementos. O que me falaram é que tirando a "média" dos desvios quadráticos o valor tem viés, e de fato tem! Mas é só por isso? E \\(\sqrt{s^2}\\), que seria o estimador para o desvio padrão, não tem viés? Não sei, mas acho que têm. Então, registro aqui que tenho que investigar isso mais a fundo. Por que? Porque sim!
+
+O próximo exercício é baseado num fenômeno que pode ocorrer com probabilidade \\(\theta\\) após um gatilho, o famoso ensaio de Bernoulli. Suponha que depois de muito observar, eu, enfim, gostaria de estimar a probabilidade daquilo ocorrer. Como proceder? Posso usar a razão entre a quantidade de vezes que ocorreu (\\(Y\\)) e o total de vezes que a reação foi provocada (\\(n\\)). Por outro lado eu posso usar a bela fórmula \\(\frac{Y + \sqrt{n}/2}{n + \sqrt{n}} \\).
+
+O erro quadrático médio do primeiro estimador é \\(\frac{\theta(1 - \theta)}{n}\\), do segundo \\(\frac{n}{4(n + \sqrt{n})^2}\\). Quando que um é melhor que o outro? Bem, é só resolver a desigualdade:
+
+$$\frac{\theta(1 - \theta)}{n} < \frac{n}{4(n + \sqrt{n})^2}.$$
+
+\\(\theta\\) é um parâmetro que varia entre zero e um. Nada de novidade. O problema é que o resultado da desigualdade é um intervalo centrado em 0,5 cuja amplitude varia conforme o tamanho da amostra. Mais precisamente, o nosso estimador diferentão é melhor para todos os valores "reais" de \\(\theta\\) dentro do intervalo \\(\left(\frac{1}{2} - \frac{\sqrt{2n\sqrt{n} + n}}{2(n + \sqrt{n})}, \frac{1}{2} + \frac{\sqrt{2n\sqrt{n} + n}}{2(n + \sqrt{n})}\right)\\). Se o dinheiro estiver curto e der pra observar apenas duas vezes o fenômeno, o estimador galã terá o menor erro quadrático médio se a probabilidade real estiver entre 0,09 e 0,91, aproximadamente. Que coisa, não? Ainda, para qualquer amostra de tamanho menor que 40, e se existir uma suspeita de que o fenômeno não seja tão raro, ou tão comum assim, o melhor não seria usar esse estimador maluco que eu nunca vi na vida, pelo critério do erro quadrático médio? :thinking:
+
+O sexto exercício é um daqueles de calcular a distribuição do máximo valor observado. Eu sempre gostei desses. Bem,
+
+$$
+\begin{align*}
+F(x) &= P(X \leq x), \\
+  &= P(x_1, \ldots, x_n \leq x), \\
+  &= \left(P_{X_{(n)}}(X \leq x)\right)^n.
+\end{align*}
+$$
+
+Como a variável tem uma distribuição uniforme no intervalo \\((0, \theta)\\),
+
+$$
+\begin{align*}
+F(x) &= \int_0^x \frac{1}{\theta} dx', \\
+  &= \frac{x}{\theta}.
+\end{align*}
+$$
+
+Então, \\(F_{X_{(n)}}(x) = \frac{x^n}{\theta^n}\\), e \\(f_{X_{(n)}}(x) = \frac{n x^{n - 1}}{\theta^n}\\).
+
+O valor esperado do máximo valor observado é mole.
+
+$$
+\begin{align*}
+E_{X_{(n)}}(x) &= \int_0^\theta \frac{x n x^{n - 1}}{\theta^n} dx, \\
+  &= \frac{n}{n + 1}\theta.
+\end{align*}
+$$
+
+Para calcular a variância é necessário o quadrado do valor esperado.
+
+$$
+\begin{align*}
+E_{X_{(n)}}(x^2) &= \int_0^\theta \frac{x^2 n x^{n - 1}}{\theta^n} dx, \\
+  &= \frac{n}{n + 2}\theta^2.
+\end{align*}
+$$
+
+Assim, \\(Var_{X_{(n)}}(x) = \frac{n}{(n + 1)^2(n + 2)}\theta^2\\).
+
+O sétimo exercício apresenta um problema onde se deseja estimar o número total de táxis em uma cidade.
+Ao invés de ir ao órgão competente do município que emite as autorizações para operações de táxis, foi sugerido ficar em pé em alguma rua movimentada e anotar o maior valor do número do táxi que passar por lá. Mas a missão mesmo é avaliar se esse estimador é viesado ou não.
+
+Novamente, o paladino da matemática entrou cegamente em ação. Aí é fácil prever que eu só perdi tempo com expansões de diferenças de potências e somas de progressões geométricas que levaram a lugar nenhum. Pelo menos, foi bom pra me entreter. Porém pra calcular isso na tranquilidade basta partir da distribuição do máximo \\(P(X_{(n)} = x) = \frac{x^n - (x - 1)^n}{N^n}\\) (apresentada no texto) e calcular o valor esperado do estimador.
+
+$$
+\begin{align*}
+E(\hat{N}_5) &= \sum_{x = 1}^N \frac{x^{n + 1} - (x - 1)^{n + 1}}{x^n - (x - 1)^n} \left( \frac{x^n - (x - 1)^n}{N^n} \right), \\
+  &= \frac{1}{N^n} \sum_{x = 1}^N x^{n + 1} - (x - 1)^{n + 1}, \\
+  &= \frac{1}{N^n} \left(1^{n + 1} + 2^{n + 1} + \ldots - 0 - 1^{n + 1} - 2^{n + 1} - \ldots - (N - 1)^{n + 1}\right), \\
+  &= \frac{N^{n + 1}}{N^n}, \\
+  &= N.
+\end{align*}
+$$
+
+O exercício seguinte pede pra verificar se é melhor estimar a média de uma distribuição normal com a média amostral ou com a constante 10. Vejamos. A média amostral não é viesada então o erro quadrático médio é sua variância. No caso, \\(EQM(\bar{x}) = \frac{nVar(X)}{n^2} = \frac{1}{n}\\). Esqueci, mas a variância da variável aleatória é conhecida e igual a um. Já a constante 10 não tem variância, afinal é uma constante. Portanto o erro quadrático médio é o viés ao quadrado. Ou seja, \\(EQM(10) = (10 - \mu)^2\\).
+
+O gráfico mostra que se o valor real da média da distribuição for entre 7 e 13 mais ou menos (o que é plausível ter essa noção, dependendo do contexto), é mais sensato utilizar a constante 10 como estimador para média segundo o critério do erro quadrático médio, ao invés da média amostral?! Pensando aqui, a média amostral pode acabar sendo "ruim", tendo apenas valores baixos, por exemplo. O que acarretaria num estimador divergente em relação ao conhecimento a priori :smiling_imp: do especialista. Por isso, usar a constante 10 blindaria a estimativa de amostras ruins. Interessante pensar sobre essas coisas!
+
+{% highlight python %}
+import numpy as np
+import matplotlib.pyplot as plt
+
+def f(mu):
+    x = (10 - mu) ** 2
+    return x
+
+x = np.linspace(0, 20, 100)
+
+plt.figure(figsize = (5.2, 2.3), dpi = 100)
+plt.plot(x, f(x), label = r'$EQM(\bar{x})$')
+plt.axhline(y = 10, color = 'red', label = r'$EQM(10)$')
+plt.legend()
+plt.xlabel(r'$\mu$')
+plt.savefig('g01.png', transparent = True, bbox_inches = 'tight', pad_inches = 0)
+{% endhighlight %}
+
+<center>
+  <figure>
+    <img src="/img/iie01/g01.png">
+    <figcaption>Comparação entre os erros quadráticos médios dos dois estimadores.</figcaption>
+  </figure>
+</center>
+
+O exercício que segue é muito parecido com o anterior. Agora, temos novamente um fenômeno que pode ocorrer com probabilidade \\(\theta\\) após um gatilho. Só que dessa vez, as condições para realização do fenômeno são extremamente raras de maneira que a gente só vai observar apenas uma vez. São sugeridos dois estimadores para a probabilidade de ocorrência do evento. O primeiro é 0% se o evento não ocorrer ou 100% caso contrário. O segundo estimador fica em cima do muro. Ele é 50% caso o evento ocorra ou não. Ok?!
+
+O primeiro, por incrível que pareça, não tem viés. Lembrando que o evento será observado apenas uma mísera vez e o valor do estimador será 0 ou 1.
+
+$$
+\begin{align*}
+E(\hat{\theta}_1) &= 0 (1 - \theta) + 1 \theta, \\
+  &= \theta.
+\end{align*}
+$$
+
+O segundo, por ser uma constante, já sabemos que tem viés. No caso é igual a:
+
+$$
+\begin{align*}
+B(\hat{\theta}_2) &= E(\hat{\theta}_2) - \theta, \\
+  &= \frac{1}{2} - \theta.
+\end{align*}
+$$
+
+E o que dizer do erro quadrátivo médio? Em relação ao primeiro estimador temos:
+
+$$
+\begin{align*}
+EQM(\hat{\theta}_1) &= Var(\hat{\theta}_1), \\
+  &= 0^2 (1 - \theta) + 1^2 \theta - \theta^2, \\
+  &= \theta (1 - \theta).
+\end{align*}
+$$
+
+Já em relação ao segundo estimador:
+
+$$
+\begin{align*}
+EQM(\hat{\theta}_2) &= B^2(\hat{\theta}_2), \\
+  &= \left(\frac{1}{2} - \theta\right)^2.
+\end{align*}
+$$
+
+O gráfico deixa bem claro que o primeiro estimador é melhor se o valor real da probabilidade for próximo das extremidades. Para os demais valores é melhor assumir que a probabilidade de ocorrência é 50%. Novamente, pensando aqui, como resolver um problema desse tipo? Como estimar a probabilidade de ocorrência de um evento que eu observo apenas uma vez (seja lá qual for o motivo)? Seria impossível isso? Não sei.
+
+{% highlight python %}
+import numpy as np
+import matplotlib.pyplot as plt
+
+def f(theta):
+    x = theta * (1 - theta)
+    return x
+
+def g(theta):
+    x = (0.5 - theta) ** 2
+    return x
+
+x = np.linspace(0, 1, 50)
+
+plt.figure(figsize = (5.2, 2.3), dpi = 100)
+plt.plot(x, f(x), label = r'$EQM(\hat{\theta}_1)$')
+plt.plot(x, g(x), label = r'$EQM(\hat{\theta}_2)$')
+plt.legend()
+plt.xlabel(r'$\theta$')
+plt.savefig('g02.png', transparent = True, bbox_inches = 'tight', pad_inches = 0)
+{% endhighlight %}
+
+<center>
+  <figure>
+    <img src="/img/iie01/g02.png">
+    <figcaption>Comparação entre os erros quadráticos médios dos dois estimadores.</figcaption>
+  </figure>
+</center>
+
+O décimo exercício apresenta uma distribuição que a primeira vista me parece uma distribuição exponencial meio deslocada. Não sei se isso de fato é verdade, mas foi a impressão que tive.
+
+$$f(x|\theta) = e^{-(x - \theta)},$$
+
+onde \\(x > \theta\\) e \\(\theta > 0\\).
+
+O espaço paramétrico de \\(\theta\\) é \\(\Theta \in \mathbb{R}^\ast_+\\). O suporte associado a distribuição é \\(\mathbb{X} = \\{x \in \mathbb{R}^\ast_+ \| x > \theta\\}\\).
+
+Para estimar o valor do parâmetro \\(\theta\\) são sugeridos dois estimadores, a média amostral e o mínimo valor observado. Antes de verificar se eles são viesados, primeiro vejamos o valor esperado da variável.
+
+$$
+\begin{align*}
+E(x) &= \int_\theta^\infty x e^{-(x - \theta)} dx, \\
+  &= \left.-xe^{-(x - \theta)}\right\vert^\infty_\theta + \int_\theta^\infty e^{-(x - \theta)} dx, \\
+  &= \theta - \left.e^{-(x - \theta)} \right\vert^\infty_\theta, \\
+  &= \theta + 1.
+\end{align*}
+$$
+
+Para calcular foi preciso resolver uma integral por partes. Até hoje lembro quando decidi aprender esse tipo de integral, foi um dia de semana a tarde, no meu quarto. Nunca mais esqueci como resolvê-las. Pode parecer besteira pra outras pessoas, mas pra mim foi algo marcante, tanto é que nunca esqueci dessa decisão que tomei. Enfim, a média amostral tem viés!
+
+$$
+\begin{align*}
+E(\bar{x}) &= E\left(\frac{\sum_{i=1}^n x_i}{n}\right), \\
+  &= \frac{n}{n}E(X), \\
+  &= \theta + 1.
+\end{align*}
+$$
+
+Para encontrar o mínimo valor esperado é necessário encontrar antes a distribuição do mínimo valor observado. A ideia é bastante parecida com a que foi utilizada alguns exercícios atrás.
+
+$$
+\begin{align*}
+F(x) &= P(X \leq x), \\
+  &= 1 - P(X > x), \\
+  &= 1 - P(x_1, \ldots, x_n > x), \\
+  &= 1 - \left(P_{X_{(1)}}(X > x)\right)^n.
+\end{align*}
+$$
+
+Substituindo a distribuição proposta,
+
+$$
+\begin{align*}
+F(x) &= 1 - \left(\int_x^\infty e^{-(x' - \theta)} dx'\right)^n, \\
+  &= 1 - e^{-n(x - \theta)}.
+\end{align*}
+$$
+
+Portanto, \\(f_{X_{(1)}}(x) = n e^{-n(x - \theta)}\\). Daí é só calcular o valor esperado dessa distribuição, integrando por partes.
+
+$$
+\begin{align*}
+E_{X_{(1)}}(x) &= \int_\theta^\infty x n e^{-n(x - \theta)}, \\
+  &= \left.-x e^{-n(x - \theta)}\right\vert_\theta^\infty + \frac{n}{n}\int_\theta^\infty e^{-n(x - \theta)} dx, \\
+  &= \theta + \frac{1}{n}.
+\end{align*}
+$$
+
+Ou seja, o estimador a partir do valor mínimo também é viesado. Mas o viés dele "some" conforme o tamanho da amostra aumenta. Então, assintoticamente ele não tem viés. O que é bom, certo?!
+
+Agora como de praxe, e os erros quadráticos médios? Para a média amostral, antes é necessário calcular a variância de \\(X\\), mas para isso:
+
+$$
+\begin{align*}
+E(x^2) &= \int_\theta^\infty x^2 e^{-(x - \theta)} dx, \\
+  &= \left.-x^2 e^{-(x - \theta)}\right\vert^\infty_\theta + 2\int_\theta^\infty xe^{-(x - \theta)} dx, \\
+  &= \theta^2 + 2\left(\left.-xe^{-(x - \theta)}\right\vert^\infty_\theta + \int_\theta^\infty e^{-(x - \theta)} dx\right), \\
+  &= \theta^2 + 2 \left(\theta - \left.e^{-(x - \theta)} \right\vert^\infty_\theta\right), \\
+  &= \theta^2 + 2(\theta + 1).
+\end{align*}
+$$
+
+Então a variância de \\(X\\) é:
+
+$$
+\begin{align*}
+Var(x) &= E(x^2) - E(x)^2, \\
+  &= \theta^2 + 2(\theta + 1) - (\theta + 1)^2, \\
+  &= 1.
+\end{align*}
+$$
+
+Eita! Um?!?! Por essa eu não esperava. Então o erro quadrático médio da média amostral pode ser calculado.
+
+$$
+\begin{align*}
+EQM(\bar{x}) &= Var(\bar{x}) + B^2(\bar{x}), \\
+  &= Var\left(\frac{\sum_{i=1}^n x_i}{n}\right) + (E(\bar{x}) - \theta)^2, \\
+  &= \frac{n}{n^2}Var(x) + (\theta + 1 - \theta)^2, \\
+  &= \frac{1}{n} + 1.
+\end{align*}
+$$
+
+Em relação ao erro quadrático médio do valor mínimo observado vamos calcular antes o valor esperado do mínimo ao quadrado.
+
+$$
+\begin{align*}
+E_{X_{(1)}}(x^2) &= \int_\theta^\infty x^2 n e^{-n(x - \theta)}, \\
+  &= \left.-x^2 e^{-n(x - \theta)}\right\vert_\theta^\infty + \frac{2}{n}\int_\theta^\infty nxe^{-n(x - \theta)} dx, \\
+  &= \theta^2 + \frac{2}{n}\left(\theta + \frac{1}{n}\right).
+\end{align*}
+$$
+
+Após esse festival de integral por partes, o erro quadrático médio pode ser calculado pela própria definição só pra variar um pouco.
+
+$$
+\begin{align*}
+EQM(X_{(1)}) &= E(X_{(1)} - \theta)^2, \\
+  &= E_{X_{(1)}}(x^2) - 2 \theta E_{X_{(1)}}(x) + \theta^2, \\
+  &= \theta^2 + \frac{2}{n}\left(\theta + \frac{1}{n}\right) - 2 \theta \left(\theta + \frac{1}{n}\right) + \theta^2, \\
+  &= \frac{2}{n^2}.
+\end{align*}
+$$
+
+O exercício finaliza pedindo uma comparação dos erros quadráticos médios dos dois estimadores em um gráfico em função de \\(\theta\\). Bem, ou eu sou um completo idiota que errei todas as contas, ou os erros quadráticos médios na verdade são funções do tamanho da amostra (e não do parâmetro \\(\theta\\)). Portanto a comparação que faz mais sentido é através do gráfico em função de \\(n\\). Nesse caso, o gráfico mostra que o mínimo valor observado é um melhor estimador do que a média amostral sob o critério do erro quadrático médio para qualquer tamanho de amostra.
+
+{% highlight python %}
+import numpy as np
+import matplotlib.pyplot as plt
+
+def f(n):
+    x = 1. / n + 1
+    return x
+
+def g(n):
+    x = 2. / n ** 2
+    return x
+
+x = np.linspace(2, 20, 100)
+
+plt.figure(figsize = (5.2, 2.3), dpi = 100)
+plt.plot(x, f(x), label = r'$EQM(\bar{x})$')
+plt.plot(x, g(x), label = r'$EQM(X_{(1)})$')
+plt.legend()
+plt.xlabel('n')
+plt.savefig('g03.png', transparent = True, bbox_inches = 'tight', pad_inches = 0)
+{% endhighlight %}
+
+<center>
+  <figure>
+    <img src="/img/iie01/g03.png">
+    <figcaption>Comparação entre os erros quadráticos médios dos dois estimadores.</figcaption>
+  </figure>
+</center>
+
+O décimo primeiro exercício é idêntico ao anterior, porém com outra distribuição. Dessa vez,
+
+$$f(x|\theta) = \frac{2x}{\theta^2},$$
+
+onde \\(0 < x < \theta\\) e \\(\theta > 0\\). Ahh e ao invés do mínimo valor observado, o estimador alternativo à média é o máximo valor observado. Tirando isso, o resto tudo é a mesma coisa.
+
+O espaço paramétrico de \\(\theta\\) é \\(\Theta \in \mathbb{R}^\ast_+\\). O suporte associado a distribuição é \\(\mathbb{X} = \\{x \in \mathbb{R}^\ast_+ \| 0 < x < \theta\\}\\).
+
+Como o caminho das pedras é conhecido, podemos pegar uns atalhos. Vamos precisar da distribuição do máximo valor observado e do primeiro e segundo momentos dessa distribuição e da própria variável aleatória. Começando pela distribuição do máximo.
+
+$$
+\begin{align*}
+F(x) &= P(X \leq x), \\
+  &= P(x_1, \ldots, x_n \leq x), \\
+  &= \left(P_{X_{(n)}}(X \leq x)\right)^n.
+\end{align*}
+$$
+
+Então a partir da distribuição apresentada,
+
+$$
+\begin{align*}
+F(x) &= \int_0^x \frac{2x'}{\theta^2} dx', \\
+  &= \frac{x^2}{\theta^2}.
+\end{align*}
+$$
+
+Então, \\(F_{X_{(n)}}(x) = \frac{x^{2n}}{\theta^{2n}}\\), e \\(f_{X_{(n)}}(x) = \frac{2n x^{2n - 1}}{\theta^{2n}}\\).
+
+Em relação a distribuição apresentada, o primeiro momento é:
+
+$$
+\begin{align*}
+E(x) &= \int_0^\theta x\frac{2x}{\theta^2} dx, \\
+  &= \left.\frac{2x^3}{3\theta^2}\right\vert_0^\theta, \\
+  &= \frac{2}{3}\theta.
+\end{align*}
+$$
+
+O segundo momento é:
+
+$$
+\begin{align*}
+E(x^2) &= \int_0^\theta x^2\frac{2x}{\theta^2} dx, \\
+  &= \left.\frac{x^4}{2\theta^2}\right\vert_0^\theta, \\
+  &= \frac{1}{2}\theta^2.
+\end{align*}
+$$
+
+Em relação ao máximo valor observado, o primeiro momento é:
+
+$$
+\begin{align*}
+E_{X_{(n)}}(x) &= \int_0^\theta x\frac{2n x^{2n - 1}}{\theta^{2n}} dx, \\
+  &= \left.\frac{2nx^{2n + 1}}{(2n + 1)\theta^{2n}}\right\vert_0^\theta, \\
+  &= \frac{2n\theta}{2n + 1}.
+\end{align*}
+$$
+
+O segundo momento é:
+
+$$
+\begin{align*}
+E_{X_{(n)}}(x^2) &= \int_0^\theta x^2\frac{2n x^{2n - 1}}{\theta^{2n}} dx, \\
+  &= \left.\frac{2nx^{2n + 2}}{(2n + 2)\theta^{2n}}\right\vert_0^\theta, \\
+  &= \frac{2n\theta^2}{2n + 2}.
+\end{align*}
+$$
+
+Pronto! Agora o resto é mole. Já de cara da pra dizer que os dois estimadores são viesados.
+
+O erro quadrático médio da média amostral é:
+
+$$
+\begin{align*}
+EQM(\bar{x}) &= Var(\bar{x}) + B^2(\bar{x}), \\
+  &= \frac{1}{n}Var(x) + (E(x) - \theta)^2, \\
+  &= \frac{1}{n}(E(x^2) - E(x)^2) + \left(\frac{2}{3}\theta - \theta\right)^2, \\
+  &= \frac{1}{n}\left(\frac{1}{2}\theta^2 - \frac{4}{9}\theta^2\right) + \frac{\theta^2}{9}, \\
+  &= \theta^2\left(\frac{1}{2n} - \frac{4}{9n} + \frac{1}{9}\right).
+\end{align*}
+$$
+
+E o erro quadrático médio do máximo valor observado é:
+
+$$
+\begin{align*}
+EQM(X_{(n)}) &= E(X_{(n)} - \theta)^2, \\
+  &= E_{X_{(n)}}(x^2) - 2 \theta E_{X_{(n)}}(x) + \theta^2, \\
+  &= \frac{2n\theta^2}{2n + 2} - 2 \theta \left(\frac{2n\theta}{2n + 1}\right) + \theta^2, \\
+  &= \theta^2\left(\frac{2n}{2n + 2} - \frac{4n}{2n + 1} + 1\right).
+\end{align*}
+$$
+
+Aqui temos uma situação curiosa. Os dois estimadores têm erros quadráticos médios parecidos. Ambos são iguais a \\(\theta^2\\) multiplicados por uma "constante" definida pelo tamanho da amostra. Então, outra vez, a comparação que faz mais sentido é feita com o gráfico das constantes em função do tamanho da amostra. O gráfico permite ver que, sob o critério do erro quadrático médio, o máximo valor observado é um melhor estimador do que a média amostral.
+
+{% highlight python %}
+import numpy as np
+import matplotlib.pyplot as plt
+
+def f(n):
+    x = 1. / (2 * n) - 4. / (9 * n) + 1. / 9
+    return x
+
+def g(n):
+    x = (2. * n) / (2 * n + 2) - (4. * n) / (2 * n + 1) + 1
+    return x
+
+x = np.linspace(2, 20, 100)
+
+plt.figure(figsize = (5.2, 2.3), dpi = 100)
+plt.plot(x, f(x), label = r'$C_{\bar{x}}$')
+plt.plot(x, g(x), label = r'$C_{X_{(n)}}$')
+plt.legend()
+plt.xlabel('n')
+plt.savefig('g04.png', transparent = True, bbox_inches = 'tight', pad_inches = 0)
+{% endhighlight %}
+
+<center>
+  <figure>
+    <img src="/img/iie01/g04.png">
+    <figcaption>Comparação entre os erros quadráticos médios dos dois estimadores.</figcaption>
+  </figure>
+</center>
+
+O exercício que segue retoma a distribuição uniforme no intervalo \\((0, \theta)\\) e pede pra corrigir o viés da média amostral e do máximo valor observado como estimadores de \\(\theta\\).
+
+Sob essa distribuição, a média amostral tem valor esperado igual a:
+
+$$
+\begin{align*}
+E(\bar{x}) &= E(x), \\
+  &= \int_0^\theta x\frac{1}{\theta} dx, \\
+  &= \frac{\theta}{2}.
+\end{align*}
+$$
+
+Então \\(2\bar{x}\\) é um estimador sem viés para \\(\theta\\).
+
+Em relação à distribuição do máximo valor observado, graças a Deus já calculamos isso anteriormente. Ainda bem, pois não tava mais aguentando calcular distribuição de máximo (mínimo) valor observado. Se bem que, quanto mais a gente repete, mais perpetua isso na mente. Enfim,
+
+$$f_{X_{(n)}}(x) = \frac{n x^{n - 1}}{\theta^n},$$
+
+e valor esperado do máximo valor observado é:
+
+$$
+\begin{align*}
+E_{X_{(n)}}(x) &= \int_0^\theta \frac{x n x^{n - 1}}{\theta^n} dx, \\
+  &= \frac{n}{n + 1}\theta.
+\end{align*}
+$$
+
+Assim, \\(\frac{n + 1}{n}X_{(n)}\\) é um estimador não viesado para \\(\theta\\).
+
+Os erros quadráticos médios desses estimadores se resumem às suas variâncias, por motivos óbvios.
+
+O erro quadrático médio da média amostral corrigida é:
+
+$$
+\begin{align*}
+EQM(2\bar{x}) &= 4Var(\bar{x}), \\
+  &= \frac{4}{n}Var(x), \\
+  &= \frac{4}{n}(E(x^2) - E(x)^2), \\
+  &= \frac{4}{n}\left(\int_0^\theta x^2 \frac{1}{\theta}dx - \frac{\theta^2}{4}\right), \\
+  &= \frac{4}{n}\left(\frac{\theta^2}{3} - \frac{\theta^2}{4}\right), \\
+  &= \frac{\theta^2}{3n}.
+\end{align*}
+$$
+
+O erro quadrático médio do máximo valor observado corrigido é (aproveitando outra vez alguns cálculos feitos em exercícios anteriores):
+
+$$
+\begin{align*}
+EQM\left(\frac{n + 1}{n}X_{(n)}\right) &= \frac{(n + 1)^2}{n^2}Var(X_{(n)}), \\
+  &= \frac{(n + 1)^2}{n^2}\frac{n}{(n + 1)^2(n + 2)}\theta^2, \\
+  &= \frac{\theta^2}{n (n + 2)}.
+\end{align*}
+$$
+
+Não precisa fazer gráfico pra perceber que o decaimento do erro quadrático médio do máximo valor observado corrigido é maior do que o da média amostral corrigida, conforme o tamanho da amostra aumenta.
+
+O último exercício do capítulo introduz uma distribuição normal com média zero mas variância desconhecida. Para estimar o parâmetro desconhecido é proposto o estimador
+
+$$\hat{\sigma}_c^2 = c \sum_{i=1}^n x_i^2.$$
+
+Primeiramente o erro quadrático médio desse estimador é:
+
+$$
+\begin{align*}
+EQM(\hat{\sigma}_c^2) &= Var\left(c \sum_{i=1}^n x_i^2\right) + \left(E\left(c \sum_{i=1}^n x_i^2\right) - \sigma^2\right)^2, \\
+  &= c^2 n Var(x^2) + (cnE(x^2) - \sigma^2)^2, \\
+  &= c^2 n (E(x^4) - E(x^2)^2) + c^2n^2E(x^2)^2 - 2cnE(x^2)\sigma^2 + \sigma^4.
+\end{align*}
+$$
+
+Dessa vez o paladino da matemática não entrou em ação, pois foram aproveitados alguns resultados encontrados por nossos ancestrais. O segundo e quarto momento da distribuição normal com média zero são \\(3\sigma^4\\) e \\(\sigma^2\\), respectivamente. Então, ao atualizar o erro quadrático médio,
+
+$$
+\begin{align*}
+EQM(\hat{\sigma}_c^2) &= c^2 n (E(x^4) - E(x^2)^2) + c^2n^2E(x^2)^2 - 2cnE(x^2)\sigma^2 + \sigma^4, \\
+  &= c^2 n (3\sigma^4 - \sigma^4) + c^2n^2\sigma^4 - 2cn\sigma^4 + \sigma^4, \\
+  &= \sigma^4 (c^2(2n + n^2) - 2cn + 1).
+\end{align*}
+$$
+
+O erro quadrático médio está em função de \\(c\\). O valor dessa constante que minimiza o erro quadrático médio é encontrado quando resolvemos a primeira derivada para zero.
+
+$$\frac{d EQM(\hat{\sigma}_c^2)}{dc} = \sigma^4 (2c(2n + n^2) - 2n).$$
+
+$$
+\begin{align*}
+2c(2n + n^2) - 2n &= 0, \\
+c &= \frac{n}{2n + n^2}, \\
+c &= \frac{1}{n + 2}.
+\end{align*}
+$$
+
+Acabou? Não! Nunca devemos esquecer de verificar se a segunda derivada é positiva, ou seja, que o valor encontrado se refere a um ponto de mínimo.
+
+$$\frac{d^2 EQM(\hat{\sigma}_c^2)}{dc^2} = \sigma^4 (4n + 2n^2) > 0.$$
+
+Pensando aqui, quer dizer então que para estimar a variância de uma distribuição normal com média zero, \\(\frac{\sum_{i=1}^n x_i^2}{n + 2}\\) tem o menor erro quadrático médio. Isso me intrigou pois eu lembro de ver algo a respeito disso no passado, mas era com o denominador igual a \\(n + 1\\) e não \\(n + 2\\). Resolvi fazer uma pequena simulação pra verificar esse resultado. Parti de uma distribuição normal com média zero e variância \\(2\pi\\). Então, para amostras de tamanho dois até cem, eu calculei o valor esperado de \\(\sum_{i=1}^n x_i^2\\) e \\((\sum_{i=1}^n x_i^2)^2\\) utilizando 10.000 repetições. Com isso, eu determinei o valor simulado que minimiza o erro quadrático médio. É fácil, pois
+
+$$
+\begin{align*}
+EQM(\hat{\sigma}_c^2) &= E\left(c\sum_{i=1}^n x_i^2 - \sigma^2\right)^2, \\
+  &= c^2 E\left(\sum_{i=1}^n x_i^2\right)^2 - 2 c \sigma^2 E\left(\sum_{i=1}^n x_i^2\right) + \sigma^4.
+\end{align*}
+$$
+
+Então derivando (e verificando o sinal da segunda derivada para ver se é um ponto de mínimo!) e igualando a zero, o valor de c simulado que minimiza o erro quadrático médio é:
+
+$$c = \sigma^2\frac{E(\sum_{i=1}^n x_i^2)}{E(\sum_{i=1}^n x_i^2)^2}.$$
+
+Daí foi só comparar com os valores previstos \\(c = \frac{1}{n + 2}\\). Bem, o gráfico mostra que tudo parece estar no caminho certo.
+
+{% highlight python %}
+import numpy as np
+import matplotlib.pyplot as plt
+
+sd = np.sqrt(2 * np.pi)
+c = []
+
+for n in xrange(2, 101):
+    a, b = 0, 0
+    for i in xrange(10000):
+        amostra = np.random.normal(loc = 0, scale = sd, size = n)
+        amostra = (amostra * amostra).sum()
+        a += (amostra - a) / (i + 1)
+        b += (amostra ** 2 - b) / (i + 1)
+    c.append(sd ** 2 * a / b)
+
+def f(n):
+    return 1 / (n + 2.)
+
+plt.figure(figsize = (5.2, 2.3), dpi = 100)
+plt.plot(xrange(2, 101), c, 'o', label = 'simulados')
+plt.plot(np.linspace(2, 100, 100), f(np.linspace(2, 100, 100)), label = 'previstos')
+plt.legend(title = 'Valores')
+plt.xlabel('n')
+plt.ylabel('c')
+plt.savefig('g05.png', transparent = True, bbox_inches = 'tight', pad_inches = 0)
+{% endhighlight %}
+
+<center>
+  <figure>
+    <img src="/img/iie01/g05.png">
+    <figcaption>Valores simulados versus previstos da constante que minimiza o EQM.</figcaption>
+  </figure>
+</center>
+
+Mas não termina aqui (o exercício já acabou há tempos, não minha curiosidade). A média da distribuição normal era definida igual zero. Mas se isso não for o caso? Se,
+
+$$\hat{\sigma}_c^2 = c\sum_{i=1}^n (x_i - \bar{x})^2.$$
+
+Então, temos uma relação que pode ser útil com o estimador não viesado para a variância.
+
+$$\hat{\sigma}_c^2 = (n - 1)cs^2$$
+
+Um exercício anterior nos mostrou que \\(Var(s^2) = \frac{2\sigma^4}{n - 1}\\). Então, o erro quadrático médio é:
+
+$$
+\begin{align*}
+EQM(\hat{\sigma}_c^2) &= c^2 (n - 1)^2 Var(s^2) + (c(n-1)E(s^2) - \sigma^2)^2, \\
+  &= c^2 (n - 1)^2 \frac{2\sigma^4}{n - 1} + (c(n-1)\sigma^2 - \sigma^2)^2, \\
+  &= 2\sigma^4c^2n - 2\sigma^4c^2 + \sigma^4(cn - c -1)^2, \\
+  &= - \sigma^4 c^2 + \sigma^4 c^2 n^2 - 2 \sigma^4 cn + 2\sigma^4c + \sigma^4, \\
+  &= \sigma^4 (c^2(n^2 - 1) - 2c(n - 1) + 1).
+\end{align*}
+$$
+
+O valor de c que minimiza o erro quadrático médio é encontrado quando pegamos a primeira derivada e igualamos a zero (e claro, conferimos se a segunda derivada é positiva).
+
+$$\frac{d EQM(\hat{\sigma}_c^2)}{dc} = \sigma^4(2c(n^2 - 1) - 2(n - 1)).$$
+
+$$\frac{d^2 EQM(\hat{\sigma}_c^2)}{dc^2} = 2\sigma^4(n^2 - 1) > 0.$$
+
+$$
+\begin{align*}
+2c(n^2 - 1) - 2(n - 1) &= 0, \\
+c &= \frac{n -1}{n^2 - 1}, \\
+c &= \frac{1}{n + 1}.
+\end{align*}
+$$
+
+Ta aí o denominador igual a \\(n+1\\) que eu me lembrava vagamente. Então para uma distribuição normal, com média e variância desconhecidas, dividir a soma dos desvios quadráticos em relação à média por \\(n - 1\\) nos dá um estimador não viesado, mas por \\(n + 1\\) nos dá um estimador com menor erro quadrático médio. E para uma distribuição qualquer? Isso ainda vale? Não sei, mas acredito que não, simplesmente pelo fato de que esses resultados partem da hipótese de que as variáveis sejam independentes e normalmente distribuídas.
+
+Com isso, o primeiro capítulo do livro foi finalizado!

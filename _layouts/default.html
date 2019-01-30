@@ -16,6 +16,10 @@
 
     {% include footer.html %}
 
+    <!--Incluir Google Analytics-->
+    {% if jekyll.environment == 'production' %}
+        {% include analytics.html %}
+    {% endif %}
   </body>
 
 </html>
